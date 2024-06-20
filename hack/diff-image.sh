@@ -254,7 +254,7 @@ function diff-image() {
         increase=""
     fi
 
-    if [[ "${reduce}" != "" ]] || [[ "${increase}" != "" ]]; then
+    if [[ "${QUICKLY}" == "" ]] || [[ "${reduce}" != "" ]] || [[ "${increase}" != "" ]]; then
         echo "${SELF}: NOT-SYNCHRONIZED-TAGS: ${image1} and ${image2} are not in synchronized" >&2
         if [[ "${DEBUG}" == "true" ]]; then
             echo "DEBUG: image1 ${image1}:" >&2
@@ -296,14 +296,13 @@ function main() {
     local image2="${2:-}"
 
     if [[ "${image1#*/}" =~ ":" ]]; then
-        diff-image-with-tag "${image1}" "${image2}" >/dev/null || {
-            if [[ "${SYNC}" == "true" ]]; then
-                echo "${SELF}: SYNCHRONIZE: synchronize from ${image1}:${tag} to ${image2}:${tag}" >&2
-                copy-image "${image1}:${tag}" "${image2}:${tag}"
-            fi
+        if [[ "${SYNC}" == "true" ]]; then
+            echo "${SELF}: SYNCHRONIZE: synchronize from ${image1} to ${image2}" >&2
+            copy-image "${image1}" "${image2}"
             return $?
-        }
-        return 0
+        fi
+        diff-image-with-tag "${image1}" "${image2}" >/dev/null
+        return $?
     fi
 
     local list=$(diff-image "${image1}" "${image2}")
