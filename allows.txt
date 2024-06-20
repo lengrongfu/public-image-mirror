@@ -69,6 +69,7 @@ docker.io/percona/**
 docker.io/phpmyadmin/**
 docker.io/portainer/**
 docker.io/projecthami/**
+docker.io/liangjw/**
 docker.io/prom/**
 docker.io/prometheuscommunity/**
 docker.io/rancher/**
